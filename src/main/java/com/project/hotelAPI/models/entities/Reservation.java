@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Reservation {
@@ -19,20 +18,15 @@ public class Reservation {
 	
 	private LocalDate checkOut;
 	
-	@ManyToOne
-	private Guest guest;
 	
-	@ManyToOne
-	private Room room;
+	public Reservation() {
+
+	}
 	
-	private boolean isReserved;
-	
-	public Reservation(LocalDate checkIn, LocalDate checkOut, Guest guest, Room room) {
+	public Reservation(LocalDate checkIn, LocalDate checkOut) {
 		super();
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
-		this.guest = guest;
-		this.room = room;
 	}
 	
 	public int getId() {
@@ -53,24 +47,5 @@ public class Reservation {
 	public void setCheckOut(LocalDate checkOut) {
 		this.checkOut = checkOut;
 	}
-	public Guest getGuest() {
-		return guest;
-	}
-	public void setGuest(Guest guest) {
-		this.guest = guest;
-	}
-	public boolean isReserved() {
-		return isReserved;
-	}
-	public void setReserved(boolean isReserved) {
-		this.isReserved = isReserved;
-	}
 
-	public Room getRoom() {
-		return room;
-	}
-
-	public void setRoom(Room room) {
-		this.room = room;
-	}
 }

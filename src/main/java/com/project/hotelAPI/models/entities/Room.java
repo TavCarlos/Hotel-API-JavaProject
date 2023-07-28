@@ -1,11 +1,9 @@
 package com.project.hotelAPI.models.entities;
 
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Room {
@@ -14,12 +12,17 @@ public class Room {
 	@Column(name = "id")
 	private int roomNumber;
 	
-	@OneToMany(mappedBy = "room")
-	private List<Reservation> reservation;
+	@OneToOne
+	private Guest guest;
 	
-	public Room(int roomNumber) {
+	public Room() {
+
+	}
+	
+	public Room(int roomNumber, Guest guest) {
 		super();
 		this.roomNumber = roomNumber;
+		this.guest = guest;
 	}
 
 
@@ -31,11 +34,13 @@ public class Room {
 		this.roomNumber = roomNumber;
 	}
 
-	public List<Reservation> getReservation() {
-		return reservation;
+
+	public Guest getReservation() {
+		return guest;
 	}
 
-	public void setReservation(List<Reservation> reservation) {
-		this.reservation = reservation;
+	public void setReservation(Guest guest) {
+		this.guest = guest;
 	}
+
 }

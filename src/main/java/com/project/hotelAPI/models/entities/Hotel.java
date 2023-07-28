@@ -17,16 +17,13 @@ public class Hotel {
 	
 	private String name;
 	
-	private double rating;
-	
 	@OneToMany
 	private List<Room> rooms;
 	
-	
-	public Hotel(String name, double rating) {
+	public Hotel(String name, List<Room> room) {
 		super();
 		this.name = name;
-		this.rating = rating;
+		this.rooms = room;
 	}
 
 	public int getId() {
@@ -45,14 +42,6 @@ public class Hotel {
 		this.name = name;
 	}
 
-	public double getRating() {
-		return rating;
-	}
-
-	public void setRating(double rating) {
-		this.rating = rating;
-	}
-
 	public List<Room> getRoom() {
 		return rooms;
 	}
@@ -60,5 +49,4 @@ public class Hotel {
 	public void setRoom(List<Room> rooms) {
 		this.rooms = rooms;
 	}
-	
 }

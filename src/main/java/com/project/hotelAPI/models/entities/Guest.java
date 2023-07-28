@@ -19,7 +19,7 @@ public class Guest {
 	
 	private String cpf;
 	
-	@OneToMany(mappedBy = "guest")
+	@OneToMany
 	private List<Reservation> reservation;
 	
 	public Guest() {
@@ -27,10 +27,11 @@ public class Guest {
 	}
 	
 	
-	public Guest(String nome, String cpf) {
+	public Guest(String nome, String cpf, List<Reservation> reservation) {
 		super();
 		this.name = nome;
 		this.cpf = cpf;
+		this.reservation = reservation;
 	}
 
 	public int getId() {
