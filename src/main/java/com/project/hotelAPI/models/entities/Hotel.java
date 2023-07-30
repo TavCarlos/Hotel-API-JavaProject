@@ -20,6 +20,10 @@ public class Hotel {
 	@OneToMany
 	private List<Room> rooms;
 	
+	public Hotel() {
+
+	}
+	
 	public Hotel(String name, List<Room> room) {
 		super();
 		this.name = name;

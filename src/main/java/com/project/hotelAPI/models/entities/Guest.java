@@ -3,6 +3,7 @@ package com.project.hotelAPI.models.entities;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,7 +20,7 @@ public class Guest {
 	
 	private String cpf;
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	private List<Reservation> reservation;
 	
 	public Guest() {

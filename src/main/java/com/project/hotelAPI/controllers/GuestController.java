@@ -61,6 +61,7 @@ public class GuestController {
 	@DeleteMapping(path = "/deleteguest/{id}")
 	public String deleteGuestCpf(@PathVariable int id) {
 		
+		
 		if(guestRepository.existsById(id)) {
 			guestRepository.deleteById(id);
 			return "Guest sucessifully deleted";
