@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.hotelAPI.models.entities.Hotel;
+import com.project.hotelAPI.models.entities.Reservation;
 import com.project.hotelAPI.models.entities.Room;
 import com.project.hotelAPI.models.repository.HotelRepository;
+import com.project.hotelAPI.models.repository.ReservationRepository;
 import com.project.hotelAPI.models.repository.RoomRepository;
 
 @RestController
@@ -27,12 +29,18 @@ public class HotelController {
 	@Autowired
 	RoomRepository roomRepository;
 	
+	@Autowired
+	ReservationRepository reservationRepository;
+	
 	@PostMapping
-	public Hotel createHotel(@RequestParam String hotelName, @RequestParam int room_id) {
+	public Hotel createHotel(@RequestParam String hotelName, @RequestParam int room_id, @RequestParam int reservation_id) {
 		
 		Optional<Room> optionalRoom = roomRepository.findById(room_id);
+		Optional<Reservation> optionalReservation = reservationRepository.findById(reservation_id);
+		
 		Hotel hotel = new Hotel(hotelName);
 		hotel.setRoom(optionalRoom.get());
+		optionalRoom.get().setReservation(optionalReservation.get());
 		
 		hotelRepository.save(hotel);
 		return hotel;
