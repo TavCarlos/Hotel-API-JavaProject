@@ -1,8 +1,10 @@
 package com.project.hotelAPI.models.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,17 +19,16 @@ public class Hotel {
 	
 	private String name;
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	private List<Room> rooms;
 	
 	public Hotel() {
 
 	}
 	
-	public Hotel(String name, List<Room> room) {
+	public Hotel(String name) {
 		super();
 		this.name = name;
-		this.rooms = room;
 	}
 
 	public int getId() {
@@ -50,7 +51,10 @@ public class Hotel {
 		return rooms;
 	}
 
-	public void setRoom(List<Room> rooms) {
-		this.rooms = rooms;
+	public void setRoom(Room room) {
+		if(rooms == null) {
+			rooms = new ArrayList<>();
+		}
+		this.rooms.add(room);
 	}
 }

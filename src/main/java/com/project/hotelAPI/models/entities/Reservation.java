@@ -3,9 +3,12 @@ package com.project.hotelAPI.models.entities;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Reservation {
@@ -18,6 +21,11 @@ public class Reservation {
 	
 	private LocalDate checkOut;
 	
+	@OneToOne
+	private Guest guest;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Room room;
 	
 	public Reservation() {
 
@@ -48,4 +56,11 @@ public class Reservation {
 		this.checkOut = checkOut;
 	}
 
+	public Guest getGuest() {
+		return guest;
+	}
+
+	public void setGuest(Guest guest) {
+		this.guest = guest;
+	}
 }

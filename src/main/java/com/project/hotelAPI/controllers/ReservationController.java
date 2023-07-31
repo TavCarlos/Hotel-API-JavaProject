@@ -2,6 +2,7 @@ package com.project.hotelAPI.controllers;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.hotelAPI.models.entities.Guest;
 import com.project.hotelAPI.models.entities.Reservation;
+import com.project.hotelAPI.models.repository.GuestRepository;
 import com.project.hotelAPI.models.repository.ReservationRepository;
 
 @RestController
@@ -23,16 +26,21 @@ public class ReservationController {
 	@Autowired
 	ReservationRepository reservationRepository;
 	
+	@Autowired
+	GuestRepository guestRepository;
+	
 	@PostMapping(path = "/add")
-	public Reservation createReservation(@RequestParam String checkIn, @RequestParam String checkOut) {
+	public Reservation createReservation(@RequestParam String checkIn, @RequestParam String checkOut, @RequestParam String guestId) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); 
 		
 		LocalDate checkInDate = LocalDate.parse(checkIn, formatter);
 		LocalDate checkOutDate = LocalDate.parse(checkOut, formatter);
 		
-		Reservation newReservation = new Reservation(checkInDate, checkOutDate); 
-		reservationRepository.save(newReservation);
+		Optional<Guest> guest =  guestRepository.findById(guestId);
+		Reservation newReservation = new Reservation(checkInDate, checkOutDate);
+		newReservation.setGuest(guest.get());
 		
+		reservationRepository.save(newReservation);
 		return newReservation;
 	}
 	

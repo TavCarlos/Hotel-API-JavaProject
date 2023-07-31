@@ -1,7 +1,5 @@
 package com.project.hotelAPI.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +28,12 @@ public class HotelController {
 	RoomRepository roomRepository;
 	
 	@PostMapping
-	public Hotel createHotel(@RequestParam String hotelName, @RequestParam int roomNumber) {
+	public Hotel createHotel(@RequestParam String hotelName, @RequestParam int room_id) {
 		
-		Optional<Room> optionalRoom = roomRepository.findById(roomNumber);
-		List<Room> rooms = new ArrayList<>();
-		rooms.add(optionalRoom.get());
+		Optional<Room> optionalRoom = roomRepository.findById(room_id);
+		Hotel hotel = new Hotel(hotelName);
+		hotel.setRoom(optionalRoom.get());
 		
-		Hotel hotel = new Hotel(hotelName, rooms);
 		hotelRepository.save(hotel);
 		return hotel;
 	}

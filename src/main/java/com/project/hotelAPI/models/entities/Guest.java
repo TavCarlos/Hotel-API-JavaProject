@@ -1,46 +1,31 @@
 package com.project.hotelAPI.models.entities;
 
-import java.util.List;
-
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Guest {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@JoinColumn(name = "cpf_id")
+	private String cpf;
 	
 	private String name;
 	
-	private String cpf;
-	
-	@OneToMany(fetch = FetchType.EAGER)
-	private List<Reservation> reservation;
+	@OneToOne(mappedBy = "guest")
+	private Reservation reservation;
 	
 	public Guest() {
 
 	}
 	
 	
-	public Guest(String nome, String cpf, List<Reservation> reservation) {
+	public Guest(String nome, String cpf) {
 		super();
 		this.name = nome;
 		this.cpf = cpf;
-		this.reservation = reservation;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getNome() {
@@ -57,13 +42,5 @@ public class Guest {
 
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
-	}
-
-	public List<Reservation> getReservation() {
-		return reservation;
-	}
-
-	public void setReservation(List<Reservation> reservation) {
-		this.reservation = reservation;
 	}
 }

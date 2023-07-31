@@ -1,7 +1,5 @@
 package com.project.hotelAPI.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 //import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.hotelAPI.models.entities.Guest;
+import com.project.hotelAPI.models.entities.Reservation;
 import com.project.hotelAPI.models.entities.Room;
-import com.project.hotelAPI.models.repository.GuestRepository;
+import com.project.hotelAPI.models.repository.ReservationRepository;
 import com.project.hotelAPI.models.repository.RoomRepository;
 
 @RestController
@@ -29,18 +27,17 @@ public class RoomController {
 	RoomRepository roomRepository;
 	
 	@Autowired
-	GuestRepository guestRepository;
+	ReservationRepository reservationRepository;
 	
 	@PostMapping
-	public Room createRoom(@RequestParam int roomNumber, @RequestParam int guestId) {
-	
-		Optional<Guest> optionalGuest = guestRepository.findById(guestId); 
-		List<Guest> guests = new ArrayList<>();
-		guests.add(optionalGuest.get());
+	public Room createRoom(@RequestParam int roomNumber, @RequestParam int reservationId) {
 		
-		Room room = new Room(roomNumber, guests);
-		roomRepository.save(room);
-		return room;
+		Optional<Reservation> optinalReservation = reservationRepository.findById(reservationId);
+		Room newRoom = new Room(roomNumber);
+		newRoom.setReservation(optinalReservation.get());
+
+		roomRepository.save(newRoom);
+		return newRoom;
 	}
 	
 	

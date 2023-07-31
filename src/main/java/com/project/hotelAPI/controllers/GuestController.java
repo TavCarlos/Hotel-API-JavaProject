@@ -1,9 +1,5 @@
 package com.project.hotelAPI.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.hotelAPI.models.entities.Guest;
-import com.project.hotelAPI.models.entities.Reservation;
 import com.project.hotelAPI.models.repository.GuestRepository;
-import com.project.hotelAPI.models.repository.ReservationRepository;
 
 @RestController
 @RequestMapping(path = "/guest")
@@ -27,17 +21,10 @@ public class GuestController {
 	@Autowired
 	private GuestRepository guestRepository;
 	
-	@Autowired
-	private ReservationRepository reservationRepository;
-	
 	@RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT} )
-	public Guest createGuest(@RequestParam String name, @RequestParam String cpf, @RequestParam int reservationId) {
+	public Guest createGuest(@RequestParam String name, @RequestParam String cpf) {
 		
-		Optional<Reservation> optionalReservation = reservationRepository.findById(reservationId);
-		List<Reservation> reservations = new ArrayList<>();
-		reservations.add(optionalReservation.get());
-		
-		Guest newGuest = new Guest(name, cpf, reservations);
+		Guest newGuest = new Guest(name, cpf);
 		guestRepository.save(newGuest);
 		return newGuest;
 	}
@@ -59,7 +46,7 @@ public class GuestController {
 	}
 	
 	@DeleteMapping(path = "/deleteguest/{id}")
-	public String deleteGuestCpf(@PathVariable int id) {
+	public String deleteGuestCpf(@PathVariable String id) {
 		
 		
 		if(guestRepository.existsById(id)) {
