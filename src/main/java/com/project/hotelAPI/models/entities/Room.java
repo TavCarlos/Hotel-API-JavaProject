@@ -1,29 +1,39 @@
 package com.project.hotelAPI.models.entities;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Room {
 
 	@Id
-	@Column(name = "roomNumber_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
+	
+	@ManyToOne
+	private Hotel hotel;
+	
 	private int roomNumber;
 	
-	@OneToMany
-	private List<Reservation> reservation;
+	@OneToMany(mappedBy = "roomId")
+	private List<Reservation> reservations;
 	
 	public Room() {
 
 	}
 	
-	public Room(int roomNumber) {
-		super();
+	public Room(Hotel hotel, int roomNumber) {
+		this.hotel = hotel;
 		this.roomNumber = roomNumber;
 	}
 
@@ -36,16 +46,27 @@ public class Room {
 		this.roomNumber = roomNumber;
 	}
 
-
-	public List<Reservation> getReservation() {
-		return reservation;
+	public int getId() {
+		return id;
 	}
 
-	public void setReservation(Reservation reservation) {
-		if (this.reservation == null) {
-			this.reservation = new ArrayList<>();
-		}
-		
-		this.reservation.add(reservation);
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Hotel getHotel() {
+		return hotel;
+	}
+
+	public void setHotel(Hotel hotel) {
+		this.hotel = hotel;
+	}
+
+	public List<Reservation> getReservation() {
+		return reservations;
+	}
+
+	public void setReservation(List<Reservation> reservation) {
+		this.reservations = reservation;
 	}
 }

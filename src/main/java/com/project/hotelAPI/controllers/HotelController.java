@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.hotelAPI.models.entities.Hotel;
-import com.project.hotelAPI.models.entities.Room;
 import com.project.hotelAPI.models.repository.HotelRepository;
-import com.project.hotelAPI.models.repository.RoomRepository;
 
 @RestController
 @RequestMapping(path = "/hotel")
@@ -24,24 +22,34 @@ public class HotelController {
 	@Autowired
 	HotelRepository hotelRepository;
 	
-	@Autowired
-	RoomRepository roomRepository;
-	
 	@PostMapping
-	public Hotel createHotel(@RequestParam String hotelName, @RequestParam int room_id) {
-		
-		
-		Optional<Room> optionalRoom = roomRepository.findById(room_id);
+	public Hotel createHotel(@RequestParam String hotelName) {
 		Hotel hotel = new Hotel(hotelName);
-		hotel.setRoom(optionalRoom.get());
 		
 		hotelRepository.save(hotel);
 		return hotel;
+	}
+	
+	@GetMapping(path = "/searchid/{hotelId}")
+	public Hotel findHotelById(@PathVariable int hotelId){
+		if (hotelRepository.findById(hotelId).isPresent()) {
+			Optional<Hotel> optionalHotel = hotelRepository.findById(hotelId);
+			Hotel hotel = optionalHotel.get();
+			return hotel;
+		} else {
+			return null;			
+		}
 	}
 	
 	@GetMapping(path = "/{pageNumber}")
 	public Iterable<Hotel> findHotel(@PathVariable int pageNumber) {
 		Pageable page = PageRequest.of(pageNumber, 10);
 		return hotelRepository.findAll(page);
+	}
+	
+	
+	@GetMapping(path = "/search/{name}")
+	public Iterable<Hotel> findHotelByName(@PathVariable String name){
+		return hotelRepository.findByNameContainingIgnoreCase(name);
 	}
 }

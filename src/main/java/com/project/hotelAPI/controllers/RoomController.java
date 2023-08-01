@@ -1,11 +1,13 @@
 package com.project.hotelAPI.controllers;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.hotelAPI.models.entities.Reservation;
+import com.project.hotelAPI.models.entities.Hotel;
 import com.project.hotelAPI.models.entities.Room;
-import com.project.hotelAPI.models.repository.ReservationRepository;
+import com.project.hotelAPI.models.repository.HotelRepository;
 import com.project.hotelAPI.models.repository.RoomRepository;
 
 @RestController
@@ -26,23 +28,29 @@ public class RoomController {
 	RoomRepository roomRepository;
 	
 	@Autowired
-	ReservationRepository reservationRepository;
+	HotelRepository hotelRepository;
 	
 	@PostMapping
-	public Room createRoom(@RequestParam int roomNumber, @RequestParam int reservationId) {
+	public Room createRoom(@RequestParam int hotelId, @RequestParam int roomNumber) {
 		
-		Optional<Reservation> optinalReservation = reservationRepository.findById(reservationId);
-		Room newRoom = new Room(roomNumber);
-		newRoom.setReservation(optinalReservation.get());
-
+		Optional<Hotel> optinalReservation = hotelRepository.findById(hotelId);
+		Hotel hotel = optinalReservation.get();
+		
+		Room newRoom = new Room(hotel, roomNumber);
 		roomRepository.save(newRoom);
+		
 		return newRoom;
 	}
 	
 	
-	@GetMapping(path = "/search/{roomNumber}")
-	public Iterable<Room> findRoomById(@PathVariable int roomNumber) {
-		return roomRepository.findByRoomNumber(roomNumber);
+	@GetMapping(path = "/search/{roomId}")
+	public Room findRoomById(@PathVariable int roomId) {
+		 if (roomRepository.findById(roomId).isPresent()) {
+			 Optional<Room> optionalRoom = roomRepository.findById(roomId);
+			 return optionalRoom.get();
+		 } else {
+			 return null;
+		 }
 	}
 	
 	@GetMapping(path = "/{pageNumber}")
@@ -51,13 +59,11 @@ public class RoomController {
 		return roomRepository.findAll(page);
 	}
 	
-	@DeleteMapping(path = "/{roomNumber}")
-	public String deleteRoom(@PathVariable int roomNumber) {
-		
-		if(roomRepository.existsById(roomNumber)) {
-			roomRepository.deleteById(roomNumber);
-			return "Room sucessfully deleted.";
-		}
-		return "Room number not found.";
+	@GetMapping(path = "/teste")
+	public List<Room> findAvailable(@RequestParam(required = true, defaultValue = "true") boolean available) {
+		Iterable<Room> allRooms = roomRepository.findAll();
+		return StreamSupport.stream(allRooms.spliterator(), false)
+				.filter(room -> available ? room.getReservation().size() == 0 : room.getReservation().size() != 0)
+				.collect(Collectors.toList());
 	}
 }

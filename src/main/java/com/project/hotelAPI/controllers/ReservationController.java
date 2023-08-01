@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.hotelAPI.models.entities.Guest;
 import com.project.hotelAPI.models.entities.Reservation;
+import com.project.hotelAPI.models.entities.Room;
 import com.project.hotelAPI.models.repository.GuestRepository;
 import com.project.hotelAPI.models.repository.ReservationRepository;
+import com.project.hotelAPI.models.repository.RoomRepository;
 
 @RestController
 @RequestMapping(path = "/reservation")
@@ -27,22 +29,36 @@ public class ReservationController {
 	ReservationRepository reservationRepository;
 	
 	@Autowired
+	RoomRepository roomRepository;
+	
+	@Autowired
 	GuestRepository guestRepository;
 	
 	@PostMapping(path = "/add")
-	public Reservation createReservation(@RequestParam String checkIn, @RequestParam String checkOut, @RequestParam String guestId) {
+	public Reservation createReservation(@RequestParam String checkIn,
+								@RequestParam String checkOut,
+								@RequestParam int guestId, 
+								@RequestParam int roomId ) {
+		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); 
 		
 		LocalDate checkInDate = LocalDate.parse(checkIn, formatter);
 		LocalDate checkOutDate = LocalDate.parse(checkOut, formatter);
 		
-		Optional<Guest> guest =  guestRepository.findById(guestId);
-		Reservation newReservation = new Reservation(checkInDate, checkOutDate);
-		newReservation.setGuest(guest.get());
 		
-		reservationRepository.save(newReservation);
-		return newReservation;
+		Optional<Room> optionalRoom = roomRepository.findById(roomId);
+		Room room = optionalRoom.get();
+		
+		Optional<Guest> optionalGuest = guestRepository.findById(guestId);
+		Guest guest = optionalGuest.get();
+		
+		Reservation reservation = new Reservation(checkInDate, checkOutDate, room, guest);
+		
+		reservationRepository.save(reservation);
+		
+		return reservation;
 	}
+
 	
 	@GetMapping(path = "/{pageNumber}")
 	public Iterable<Reservation> FindAllReservations(@PathVariable int pageNumber){
