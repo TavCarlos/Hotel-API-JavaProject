@@ -5,7 +5,6 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
@@ -16,7 +15,7 @@ public class Room {
 	@Column(name = "roomNumber_id")
 	private int roomNumber;
 	
-	@OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
+	@OneToMany
 	private List<Reservation> reservation;
 	
 	public Room() {
