@@ -2,6 +2,9 @@ package com.project.hotelAPI.models.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Guest {
 
 	@Id
@@ -19,7 +23,6 @@ public class Guest {
 	
 	private String name;
 	
-//	@JsonManagedReference
 	@OneToMany(mappedBy = "guestId")
 	private List<Reservation> reservations;
 	

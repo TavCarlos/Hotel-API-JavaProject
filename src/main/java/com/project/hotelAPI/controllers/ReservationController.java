@@ -2,6 +2,7 @@ package com.project.hotelAPI.controllers;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +62,49 @@ public class ReservationController {
 
 	
 	@GetMapping(path = "/{pageNumber}")
-	public Iterable<Reservation> FindAllReservations(@PathVariable int pageNumber){
+	public Iterable<Reservation> findAllReservations(@PathVariable int pageNumber){
 		Pageable page = PageRequest.of(pageNumber, 10);
 		return reservationRepository.findAll(page);
+	}
+	
+	@GetMapping(path = "/getid/{reservationId}")
+	public Reservation getReservationById(@PathVariable int reservationId) {
+		Optional<Reservation> optionalReservtion = reservationRepository.findById(reservationId);
+		
+		Reservation reservation = optionalReservtion.get();
+		return reservation;
+	}
+	
+	@GetMapping(path = "/guets/{guestId}")
+	public List<Reservation> getReservationsByGuest(@PathVariable int guestId) {
+		Optional<Guest> optionalGuest = guestRepository.findById(guestId);
+		Guest guest = optionalGuest.orElseThrow(() -> new IllegalArgumentException("Guest Id not found."));
+		return guest.getReservation();
+	}
+	
+	@GetMapping(path = "/guest/{guestCpf}")
+	public List<Reservation> getReservationsByCpf(@PathVariable String guestCpf){
+		
+		Optional<Guest> optionalGuest = guestRepository.findByCpf(guestCpf);
+		Guest guest = optionalGuest.orElseThrow(() -> new IllegalArgumentException("Guest CPF not found."));
+		return guest.getReservation();
+	}
+
+	@GetMapping(path =  "/rooms/{roomId}/reservations")
+	public List<Reservation> getReservationByRoom(@PathVariable int roomId) {
+		Optional<Room> optionalRoom = roomRepository.findById(roomId);
+		Room room = optionalRoom.orElseThrow(() -> new IllegalArgumentException("Room ID not found."));
+		return room.getReservation();
+	}
+	
+	@GetMapping(path = "/test")
+	public List<Reservation> getReservationByDate(@RequestParam String firstDate, @RequestParam String lastDate) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		
+		LocalDate startDate = LocalDate.parse(firstDate, formatter);
+		LocalDate endDate = LocalDate.parse(lastDate, formatter);
+		
+		return reservationRepository.findByCheckInBetween(startDate, endDate);
+		
 	}
 }

@@ -1,5 +1,7 @@
 package com.project.hotelAPI.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,14 +29,7 @@ public class GuestController {
 		guestRepository.save(newGuest);
 		return newGuest;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 	@GetMapping(path = "/findbypage/{pageNumber}")
 	public Iterable<Guest> getAllGuests(@PathVariable int pageNumber) {
 		Pageable page = PageRequest.of(pageNumber, 10);
@@ -47,7 +42,9 @@ public class GuestController {
 	}
 	
 	@GetMapping(path = "/findbycpf/{searchCpf}")
-	public Iterable<Guest> getGuestByCpf(@PathVariable String searchCpf){
-		return guestRepository.findByCpf(searchCpf);
+	public Guest getGuestByCpf(@PathVariable String searchCpf){
+		Optional<Guest> optionalguest = guestRepository.findByCpf(searchCpf);
+		Guest guest = optionalguest.orElseThrow(() -> new IllegalArgumentException("Guest CPF not found."));
+		return guest;
 	}
 }

@@ -8,6 +8,7 @@ import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,11 +60,22 @@ public class RoomController {
 		return roomRepository.findAll(page);
 	}
 	
-	@GetMapping(path = "/teste")
+	@GetMapping(path = "/available")
 	public List<Room> findAvailable(@RequestParam(required = true, defaultValue = "true") boolean available) {
 		Iterable<Room> allRooms = roomRepository.findAll();
 		return StreamSupport.stream(allRooms.spliterator(), false)
 				.filter(room -> available ? room.getReservation().size() == 0 : room.getReservation().size() != 0)
 				.collect(Collectors.toList());
+	}
+	
+	@DeleteMapping(path = "/delete")
+	public String deleteRoom(@RequestParam int roomId) {
+		Optional<Room> optionalRoom = roomRepository.findById(roomId);
+		if(optionalRoom.isPresent()) {
+			int roomName = optionalRoom.get().getRoomNumber();
+			roomRepository.deleteById(roomId);
+			return roomName + " Successfully deleted.";
+		}
+		return "Room ID not found.";
 	}
 }

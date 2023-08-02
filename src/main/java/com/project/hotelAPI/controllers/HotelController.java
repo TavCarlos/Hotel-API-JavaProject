@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,5 +52,16 @@ public class HotelController {
 	@GetMapping(path = "/search/{name}")
 	public Iterable<Hotel> findHotelByName(@PathVariable String name){
 		return hotelRepository.findByNameContainingIgnoreCase(name);
+	}
+	
+	@DeleteMapping(path = "/delete")
+	public String deleterHotelById(@RequestParam int hotelId) {
+		Optional<Hotel> hotel = hotelRepository.findById(hotelId);
+		if(hotel.isPresent()) {
+			String hotelName = hotel.get().getName();
+			hotelRepository.deleteById(hotelId);
+			return hotelName + " Successfully deleted.";
+		}
+		return "Hotel ID not found.";
 	}
 }
