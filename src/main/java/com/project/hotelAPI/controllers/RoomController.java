@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,6 +69,35 @@ public class RoomController {
 				.collect(Collectors.toList());
 	}
 	
+	
+	@PutMapping(path = "/updateroom")
+	public Room updateHotelNameByRoom(@RequestParam int roomId, 
+									@RequestParam  String newHotelName) {
+		Optional<Room> optionalRoom = roomRepository.findById(roomId);
+		if(optionalRoom.isEmpty()) {
+			throw new IllegalArgumentException("Room ID not found.");
+		}
+		
+		Room room = optionalRoom.get();
+		room.getHotel().setName(newHotelName);
+		roomRepository.save(room);
+		return room;
+	}
+	
+	@PutMapping(path = "/updateroomNumber")
+	public Room UpdateRoomNumber(@RequestParam int roomId, @RequestParam int newRoomNumber) {
+		Optional<Room> optionalRoom = roomRepository.findById(roomId);
+		if(optionalRoom.isEmpty()) {
+			throw new IllegalArgumentException("Room ID not found.");
+		}
+		
+		Room room = optionalRoom.get();
+		room.setRoomNumber(newRoomNumber);
+		roomRepository.save(room);
+		return room;
+	}
+	
+	
 	@DeleteMapping(path = "/delete")
 	public String deleteRoom(@RequestParam int roomId) {
 		Optional<Room> optionalRoom = roomRepository.findById(roomId);
@@ -77,5 +107,23 @@ public class RoomController {
 			return roomName + " Successfully deleted.";
 		}
 		return "Room ID not found.";
+	}
+	
+	@DeleteMapping("/deleteall")
+	public String deleteRoomsByHotel(@RequestParam int hotelId) {
+		Optional<Hotel> optionalHotel = hotelRepository.findById(hotelId);
+		
+		if(!optionalHotel.isPresent()) {
+			return "Hotel ID not found.";
+		}
+		
+		Hotel hotel = optionalHotel.get();
+		List<Room> rooms = roomRepository.findByHotel(hotel);
+		
+		for(Room room: rooms) {
+			roomRepository.deleteById(room.getId());
+		}
+		
+		return "All rooms related to " + hotel.getName() + " were successfully deleted";
 	}
 }

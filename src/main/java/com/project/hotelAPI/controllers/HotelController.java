@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,6 +54,24 @@ public class HotelController {
 	public Iterable<Hotel> findHotelByName(@PathVariable String name){
 		return hotelRepository.findByNameContainingIgnoreCase(name);
 	}
+	
+	
+	@PutMapping("/updatehotel")
+	public Hotel updateHotlNameById(@RequestParam int hotelId, 
+									@RequestParam String newHotelName) {
+		Optional<Hotel> optionalHotel = hotelRepository.findById(hotelId);
+		if(optionalHotel.isEmpty()) {
+			throw new IllegalArgumentException("Hotel ID not found");
+		}
+		
+		Hotel hotel = optionalHotel.get();
+		hotel.setName(newHotelName);
+		hotelRepository.save(hotel);
+		return hotel;
+	}
+	
+	
+	
 	
 	@DeleteMapping(path = "/delete")
 	public String deleterHotelById(@RequestParam int hotelId) {

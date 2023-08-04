@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +29,9 @@ public class Reservation {
 	private LocalDate checkIn;
 	
 	private LocalDate checkOut;
+	
+	@Column(columnDefinition = "boolean default false")
+	private boolean isDeleted;
 	
 	public Reservation() {
 
@@ -78,5 +82,13 @@ public class Reservation {
 
 	public void setCheckOut(LocalDate checkOut) {
 		this.checkOut = checkOut;
+	}
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 }

@@ -73,5 +73,4 @@ public class Guest {
 	public void setReservation(List<Reservation> reservation) {
 		this.reservations = reservation;
 	}
-
 }
