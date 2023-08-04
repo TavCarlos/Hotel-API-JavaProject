@@ -10,5 +10,5 @@ import com.project.hotelAPI.models.entities.Reservation;
 
 public interface ReservationRepository extends CrudRepository<Reservation, Integer>, PagingAndSortingRepository<Reservation, Integer> {
 
-	List<Reservation> findByCheckInBetween(LocalDate startDate, LocalDate endDate);
+	List<Reservation> findByCheckInDateBetween(LocalDate startDate, LocalDate endDate);
 }

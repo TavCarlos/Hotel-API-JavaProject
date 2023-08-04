@@ -23,7 +23,7 @@ public class Guest {
 	
 	private String name;
 	
-	@OneToMany(mappedBy = "guestId")
+	@OneToMany(mappedBy = "guest")
 	private List<Reservation> reservations;
 	
 	public Guest() {

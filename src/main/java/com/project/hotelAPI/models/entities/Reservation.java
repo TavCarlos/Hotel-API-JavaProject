@@ -21,14 +21,14 @@ public class Reservation {
 	private int id;
 	
 	@ManyToOne
-	private Room roomId;
+	private Room room;
 	
 	@ManyToOne
-	private Guest guestId;
+	private Guest guest;
 	
-	private LocalDate checkIn;
+	private LocalDate checkInDate;
 	
-	private LocalDate checkOut;
+	private LocalDate checkOutDate;
 	
 	@Column(columnDefinition = "boolean default false")
 	private boolean isDeleted;
@@ -38,10 +38,10 @@ public class Reservation {
 	}
 	
 	public Reservation(LocalDate checkIn, LocalDate checkOut, Room room, Guest guest) {
-		this.checkIn = checkIn;
-		this.checkOut = checkOut;
-		this.roomId = room;
-		this.guestId = guest;
+		this.checkInDate = checkIn;
+		this.checkOutDate = checkOut;
+		this.room = room;
+		this.guest = guest;
 	}
 
 	public int getId() {
@@ -53,35 +53,35 @@ public class Reservation {
 	}
 
 	public Room getRoomId() {
-		return roomId;
+		return room;
 	}
 
 	public void setRoomId(Room roomId) {
-		this.roomId = roomId;
+		this.room = roomId;
 	}
 
 	public Guest getGuestId() {
-		return guestId;
+		return guest;
 	}
 
 	public void setGuestId(Guest guestId) {
-		this.guestId = guestId;
+		this.guest = guestId;
 	}
 
 	public LocalDate getCheckIn() {
-		return checkIn;
+		return checkInDate;
 	}
 
 	public void setCheckIn(LocalDate checkIn) {
-		this.checkIn = checkIn;
+		this.checkInDate = checkIn;
 	}
 
 	public LocalDate getCheckOut() {
-		return checkOut;
+		return checkOutDate;
 	}
 
 	public void setCheckOut(LocalDate checkOut) {
-		this.checkOut = checkOut;
+		this.checkOutDate = checkOut;
 	}
 
 	public boolean isDeleted() {

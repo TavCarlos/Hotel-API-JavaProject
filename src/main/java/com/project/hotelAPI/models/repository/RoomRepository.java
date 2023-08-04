@@ -10,7 +10,7 @@ import com.project.hotelAPI.models.entities.Room;
 
 public interface RoomRepository extends CrudRepository<Room, Integer>, PagingAndSortingRepository<Room, Integer>{
 
-	public Iterable<Room> findByRoomNumber(int pageNumber);
+	public List<Room> findByRoomNumber(int pageNumber);
 	
 	public List<Room> findByHotel(Hotel hotel);
 }

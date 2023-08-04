@@ -11,4 +11,5 @@ public interface GuestRepository extends CrudRepository<Guest, Integer>, PagingA
 
 	public Iterable<Guest> findByNameContainingIgnoreCase(String name);
 	public Optional<Guest> findByCpf(String cpf);
+	
 }

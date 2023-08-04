@@ -27,7 +27,7 @@ public class GuestController {
 
 	@Autowired
 	private GuestRepository guestRepository;
-
+	
 	
 	@RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT} )
 	public Guest createGuest(@RequestParam String name, @RequestParam String cpf) {
@@ -38,25 +38,25 @@ public class GuestController {
 	}
 
 	@GetMapping(path = "/findbypage/{pageNumber}")
-	public Iterable<Guest> getAllGuests(@PathVariable int pageNumber) {
+	public Iterable<Guest> findAllGuestsByPage(@PathVariable int pageNumber) {
 		Pageable page = PageRequest.of(pageNumber, 10);
 		return guestRepository.findAll(page);
 	}
 	
 	@GetMapping(path = "/findbyname/{searchName}")
-	public Iterable<Guest> getGuestByName(@PathVariable String searchName){
+	public Iterable<Guest> findGuestsByNameContainingIgnoreCase(@PathVariable String searchName){
 		return guestRepository.findByNameContainingIgnoreCase(searchName);
 	}
 	
 	@GetMapping(path = "/findbycpf/{searchCpf}")
-	public Guest getGuestByCpf(@PathVariable String searchCpf){
+	public Guest findGuestByCpf(@PathVariable String searchCpf){
 		Optional<Guest> optionalguest = guestRepository.findByCpf(searchCpf);
 		Guest guest = optionalguest.orElseThrow(() -> new IllegalArgumentException("Guest CPF not found."));
 		return guest;
 	}
 	
 	@PutMapping(path = "/teste")
-	public Guest updateReservationByGuest(@RequestParam int guestId, 
+	public Guest updateReservationByGuestId(@RequestParam int guestId, 
 										@RequestParam int reservationId, 
 										@RequestParam String newCheckIn, 
 										@RequestParam String newCheckOut){
@@ -74,12 +74,10 @@ public class GuestController {
 				reservation.setCheckOut(CheckOut);
 			}
 		}
+		
 		guestRepository.save(guest);
 		return guest;
 	}
-	
-	
-	
 	
 	@DeleteMapping(path = "/delete")
 	public String deleteGuestById(@RequestParam int guestId) {
@@ -93,7 +91,7 @@ public class GuestController {
 	}
 	
 	@DeleteMapping(path = "/delete/{guestId}/reservations")
-	public String deleteAllReservationByGuest(@PathVariable int guestId) {
+	public String deleteAllReservationsByGuestId(@PathVariable int guestId) {
 		Optional<Guest> optionalGuest = guestRepository.findById(guestId);
 		if(!optionalGuest.isPresent()) {
 			return "Guest ID not found.";
@@ -112,7 +110,7 @@ public class GuestController {
 	}
 	
 	@DeleteMapping(path = "/delete/{guestId}/reservations/{reservationId}")
-	public String deleteReservationByGuest(@PathVariable int guestId, @PathVariable int reservationId) {
+	public String deleteReservationByGuestId(@PathVariable int guestId, @PathVariable int reservationId) {
 		Optional<Guest> optionalGuest = guestRepository.findById(guestId);
 		if(optionalGuest.isEmpty()) {
 			return "Guest not found.";

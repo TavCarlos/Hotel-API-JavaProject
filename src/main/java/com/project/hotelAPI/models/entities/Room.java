@@ -25,7 +25,7 @@ public class Room {
 	
 	private int roomNumber;
 	
-	@OneToMany(mappedBy = "roomId")
+	@OneToMany(mappedBy = "room")
 	private List<Reservation> reservations;
 	
 	public Room() {
@@ -66,7 +66,7 @@ public class Room {
 		return reservations;
 	}
 
-	public void setReservation(List<Reservation> reservation) {
-		this.reservations = reservation;
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
 	}
 }
