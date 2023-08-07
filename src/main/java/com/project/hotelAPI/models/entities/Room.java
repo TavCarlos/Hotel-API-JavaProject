@@ -11,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
@@ -21,8 +23,11 @@ public class Room {
 	private int id;
 	
 	@ManyToOne
+	@NotBlank
 	private Hotel hotel;
 	
+	@Positive
+	@NotBlank
 	private int roomNumber;
 	
 	@OneToMany(mappedBy = "room")

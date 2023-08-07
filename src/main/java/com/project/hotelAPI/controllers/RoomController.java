@@ -1,21 +1,21 @@
 package com.project.hotelAPI.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.hotelAPI.models.entities.Room;
 import com.project.hotelAPI.services.RoomService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/rooms")
@@ -25,48 +25,40 @@ public class RoomController {
 	private RoomService roomService;
 	
 	@PostMapping
-	public Room createRoom(@RequestParam int hotelId, 
-						@RequestParam int roomNumber) {	
-		return roomService.createRoom(hotelId, roomNumber);
+	public ResponseEntity<Room> createRoom(@Valid @RequestBody Room room) {	
+		Room newRoom = roomService.createRoom(room);
+		return ResponseEntity.ok().body(newRoom);
 	}
 	
-	
-	@GetMapping(path = "/search/{roomId}")
-	public Room findRoomById(@PathVariable int roomId) {
-		return roomService.findRoomById(roomId);
+	@GetMapping(path = "/search/{id}")
+	public ResponseEntity<Room> findRoomById(@PathVariable int id) {
+		Room room = roomService.findRoomById(id);
+		return ResponseEntity.ok().body(room);
 	}
 	
 	@GetMapping(path = "/{page}")
-	public Iterable<Room> findAllRooms(@PathVariable int page){
-		Pageable pageable = PageRequest.of(page, 10);
-		return roomService.findAllRooms(pageable);
-	}
-	
-	@GetMapping(path = "/available")
-	public List<Room> findAvailable(@RequestParam(required = true, defaultValue = "true") boolean available) {
-		return roomService.findAvailable(available);
+	public ResponseEntity<Iterable<Room>> findAllRooms(@PathVariable int page){
+		Iterable<Room> rooms = roomService.findAllRooms(page);
+		return ResponseEntity.ok().body(rooms);
 	}
 	
 	
 	@PutMapping(path = "/updateroom")
-	public Room updateHotelName(@RequestParam int roomId, 
-								@RequestParam  String newHotelName) {
-	return roomService.updateHotelName(roomId, newHotelName);
+	public ResponseEntity<Room> updateHotelName(@Valid @RequestBody Room room) {
+		Room updatedRoom = roomService.updateHotelName(room);
+		return ResponseEntity.ok().body(updatedRoom);
 	}
 	
-	@PutMapping(path = "/updateroomNumber")
-	public Room updateRoomNumber(@RequestParam int roomId, 
-								@RequestParam int newRoomNumber) {
-		return roomService.updateRoomNumber(roomId, newRoomNumber);
+	
+	@DeleteMapping(path = "/delete/{id}")
+	public ResponseEntity<String> deleteRoom(@PathVariable int id) {
+		roomService.deleteRoom(id);
+		return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 	}
 	
-	@DeleteMapping(path = "/delete")
-	public String deleteRoom(@RequestParam int roomId) {
-		return roomService.deleteRoom(roomId);
-	}
-	
-	@DeleteMapping("/deleteall")
-	public String deleteRoomsByHotel(@RequestParam int hotelId) {
-		return roomService.deleteRoomsByHotel(hotelId);
+	@DeleteMapping(path = "/deleteall/{id}")
+	public ResponseEntity<String> deleteRoomsByHotel(@PathVariable int id) {
+		roomService.deleteRoomsByHotel(id);
+		return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 	}
 }

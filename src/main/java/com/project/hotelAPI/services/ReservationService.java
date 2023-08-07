@@ -3,7 +3,6 @@ package com.project.hotelAPI.services;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -13,9 +12,8 @@ import org.springframework.stereotype.Service;
 import com.project.hotelAPI.models.entities.Guest;
 import com.project.hotelAPI.models.entities.Reservation;
 import com.project.hotelAPI.models.entities.Room;
-import com.project.hotelAPI.models.repository.GuestRepository;
 import com.project.hotelAPI.models.repository.ReservationRepository;
-import com.project.hotelAPI.models.repository.RoomRepository;
+import com.project.hotelAPI.services.exceptions.EntityNotFoundException;
 
 @Service
 public class ReservationService {
@@ -24,31 +22,14 @@ public class ReservationService {
 	ReservationRepository reservationRepository;
 	
 	@Autowired
-	RoomRepository roomRepository;
+	RoomService roomService;
 	
 	@Autowired
-	GuestRepository guestRepository;
-	
+	GuestService guestService;
 	
 
-	public Reservation createReservation(String checkIn, String checkOut, int guestId, int roomId ) {
-		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); 
-		
-		LocalDate checkInDate = LocalDate.parse(checkIn, formatter);
-		LocalDate checkOutDate = LocalDate.parse(checkOut, formatter);
-		
-		
-		Optional<Room> optionalRoom = roomRepository.findById(roomId);
-		Room room = optionalRoom.get();
-		
-		Optional<Guest> optionalGuest = guestRepository.findById(guestId);
-		Guest guest = optionalGuest.get();
-		
-		Reservation reservation = new Reservation(checkInDate, checkOutDate, room, guest);
-		
+	public Reservation createReservation(Reservation reservation) {
 		reservationRepository.save(reservation);
-		
 		return reservation;
 	}
 
@@ -59,32 +40,26 @@ public class ReservationService {
 	}
 	
 	
-	public Reservation getReservationById(int reservationId) {
-		Optional<Reservation> optionalReservtion = reservationRepository.findById(reservationId);
-		
-		Reservation reservation = optionalReservtion.get();
-		return reservation;
+	public Reservation getReservationById(int id) {
+		return reservationRepository.findById(id).orElseThrow(() 
+				-> new EntityNotFoundException("Reservation ID " + id + " not found"));
 	}
 	
 
-	public List<Reservation> getReservationsByGuestId(int guestId) {
-		Optional<Guest> optionalGuest = guestRepository.findById(guestId);
-		Guest guest = optionalGuest.orElseThrow(() -> new IllegalArgumentException("Guest Id not found."));
+	public List<Reservation> getReservationsByGuestId(int id) {
+		Guest guest = guestService.findGuestById(id);
 		return guest.getReservation();
 	}
 	
 
-	public List<Reservation> getReservationsByGuestCpf(String guestCpf){
-		
-		Optional<Guest> optionalGuest = guestRepository.findByCpf(guestCpf);
-		Guest guest = optionalGuest.orElseThrow(() -> new IllegalArgumentException("Guest CPF not found."));
+	public List<Reservation> getReservationsByGuestCpf(String cpf){
+		Guest guest = guestService.findGuestByCpf(cpf);
 		return guest.getReservation();
 	}
 
 
-	public List<Reservation> getReservationsByRoomId(int roomId) {
-		Optional<Room> optionalRoom = roomRepository.findById(roomId);
-		Room room = optionalRoom.orElseThrow(() -> new IllegalArgumentException("Room ID not found."));
+	public List<Reservation> getReservationsByRoomId(int id) {
+		Room room = roomService.findRoomById(id);
 		return room.getReservation();
 	}
 	
@@ -96,7 +71,6 @@ public class ReservationService {
 		LocalDate endDate = LocalDate.parse(lastDate, formatter);
 		
 		return reservationRepository.findByCheckInDateBetween(startDate, endDate);
-		
 	}
 	
 	

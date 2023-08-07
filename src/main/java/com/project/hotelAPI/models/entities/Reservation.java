@@ -11,6 +11,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -21,13 +24,17 @@ public class Reservation {
 	private int id;
 	
 	@ManyToOne
+	@NotBlank
 	private Room room;
 	
 	@ManyToOne
+	@NotBlank
 	private Guest guest;
 	
+	@FutureOrPresent(message = "Invalid check-in date")
 	private LocalDate checkInDate;
 	
+	@Future(message = "check-out must be in a future date")
 	private LocalDate checkOutDate;
 	
 	@Column(columnDefinition = "boolean default false")
