@@ -21,7 +21,7 @@ public class Reservation {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private long id;
 	
 	@ManyToOne
 	@NotBlank
@@ -38,7 +38,7 @@ public class Reservation {
 	private LocalDate checkOutDate;
 	
 	@Column(columnDefinition = "boolean default false")
-	private boolean isDeleted;
+	private boolean isCancelled;
 	
 	public Reservation() {
 
@@ -51,11 +51,11 @@ public class Reservation {
 		this.guest = guest;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -91,11 +91,11 @@ public class Reservation {
 		this.checkOutDate = checkOut;
 	}
 
-	public boolean isDeleted() {
-		return isDeleted;
+	public boolean isCancelled() {
+		return isCancelled;
 	}
 
-	public void setDeleted(boolean isDeleted) {
-		this.isDeleted = isDeleted;
+	public void setCancelled(boolean isCancelled) {
+		this.isCancelled = isCancelled;
 	}
 }

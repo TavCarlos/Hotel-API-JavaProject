@@ -12,7 +12,7 @@ public class Hotel {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private long id;
 	
 	@NotBlank(message = "Hotel name must not be blank or null")
 	@Size(min = 3, max = 100, message = "Hotel name must have at least 3 digits")
@@ -27,11 +27,11 @@ public class Hotel {
 		this.name = name;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

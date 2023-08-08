@@ -8,7 +8,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.project.hotelAPI.models.entities.Reservation;
 
-public interface ReservationRepository extends CrudRepository<Reservation, Integer>, PagingAndSortingRepository<Reservation, Integer> {
+public interface ReservationRepository extends CrudRepository<Reservation, Long>, PagingAndSortingRepository<Reservation, Long> {
 
 	List<Reservation> findByCheckInDateBetween(LocalDate startDate, LocalDate endDate);
+	
+	
 }

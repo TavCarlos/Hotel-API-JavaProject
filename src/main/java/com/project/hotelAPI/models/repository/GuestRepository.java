@@ -8,7 +8,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.project.hotelAPI.models.entities.Guest;
 
-public interface GuestRepository extends CrudRepository<Guest, Integer>, PagingAndSortingRepository<Guest, Integer>{
+public interface GuestRepository extends CrudRepository<Guest, Long>, PagingAndSortingRepository<Guest, Long>{
 
 	public List<Guest> findByNameContainingIgnoreCase(String name);
 	public Optional<Guest> findByCpf(String cpf);

@@ -8,7 +8,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import com.project.hotelAPI.models.entities.Hotel;
 import com.project.hotelAPI.models.entities.Room;
 
-public interface RoomRepository extends CrudRepository<Room, Integer>, PagingAndSortingRepository<Room, Integer>{
+public interface RoomRepository extends CrudRepository<Room, Long>, PagingAndSortingRepository<Room, Long>{
 
 	public List<Room> findByRoomNumber(int pageNumber);
 	

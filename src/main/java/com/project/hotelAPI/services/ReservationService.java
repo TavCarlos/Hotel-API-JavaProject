@@ -40,13 +40,13 @@ public class ReservationService {
 	}
 	
 	
-	public Reservation getReservationById(int id) {
+	public Reservation getReservationById(long id) {
 		return reservationRepository.findById(id).orElseThrow(() 
 				-> new EntityNotFoundException("Reservation ID " + id + " not found"));
 	}
 	
 
-	public List<Reservation> getReservationsByGuestId(int id) {
+	public List<Reservation> getReservationsByGuestId(long id) {
 		Guest guest = guestService.findGuestById(id);
 		return guest.getReservation();
 	}
@@ -58,7 +58,7 @@ public class ReservationService {
 	}
 
 
-	public List<Reservation> getReservationsByRoomId(int id) {
+	public List<Reservation> getReservationsByRoomId(long id) {
 		Room room = roomService.findRoomById(id);
 		return room.getReservation();
 	}
@@ -73,5 +73,25 @@ public class ReservationService {
 		return reservationRepository.findByCheckInDateBetween(startDate, endDate);
 	}
 	
+	
+	public Reservation updateReservation(Reservation reservation) {
+		Reservation updatedReservation = getReservationById(reservation.getId());
+		reservationRepository.save(updatedReservation);
+		return updatedReservation;
+	}
+	
+	
+	
+	public void deleteReservationByGuest(long guestId, long reservationId) {
+		List<Reservation> reservations = getReservationsByGuestId(guestId);
+		Reservation reservationToDelete = getReservationById(reservationId);
+		
+		for(Reservation reservation : reservations) {
+			if(reservation.equals(reservationToDelete)) {
+				reservationToDelete.setCancelled(true);
+				reservationRepository.save(reservationToDelete);
+			}
+		}
+	}
 	
 }

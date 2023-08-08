@@ -7,7 +7,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.project.hotelAPI.models.entities.Hotel;
 
-public interface HotelRepository extends CrudRepository<Hotel, Integer>, PagingAndSortingRepository<Hotel, Integer>{
+public interface HotelRepository extends CrudRepository<Hotel, Long>, PagingAndSortingRepository<Hotel, Long>{
 
 	public List<Hotel> findByNameContainingIgnoreCase (String name);
 }

@@ -22,7 +22,7 @@ public class HotelService {
 		return hotel;
 	}
 	
-	public Hotel findHotelById(int hotelId) {
+	public Hotel findHotelById(long hotelId) {
 		return hotelRepository.findById(hotelId).orElseThrow(
 				() -> new EntityNotFoundException("Hotel ID " + hotelId + " not found."));
 	}
@@ -48,7 +48,7 @@ public class HotelService {
 		return hotel;
 	}
 	
-	public void deleteHotelById(int id) {
+	public void deleteHotelById(long id) {
 		hotelRepository.delete(findHotelById(id));
 	}
 }

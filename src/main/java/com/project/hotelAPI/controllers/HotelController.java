@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.hotelAPI.models.entities.Hotel;
@@ -20,41 +21,41 @@ import com.project.hotelAPI.services.HotelService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(path = "/hotel")
+@RequestMapping(path = "/hotels")
 public class HotelController {
 
 	@Autowired
 	HotelService hotelService;
 	
 
-	@PostMapping
+	@PostMapping("/create")
 	public ResponseEntity<Hotel> createHotel(@Valid @RequestBody Hotel hotel) {		
 		Hotel newHotel = hotelService.createHotel(hotel);
 		return ResponseEntity.ok().body(newHotel);
 	}
 	
 	
-	@GetMapping(path = "/searchid/{hotelId}")
-	public ResponseEntity<Hotel> findHotelById(@PathVariable int hotelId){
+	@GetMapping(path = "/{hotelId}")
+	public ResponseEntity<Hotel> findHotelById(@PathVariable long hotelId){
 		Hotel hotel =  hotelService.findHotelById(hotelId);
 		return ResponseEntity.ok().body(hotel);
 	}
 
-	@GetMapping(path = "/{pageNumber}")
-	public  ResponseEntity<Iterable<Hotel>> findAllHotelsByPage(@PathVariable int pageNumber) {
-		Iterable<Hotel> hotels = hotelService.findAllHotelsByPage(pageNumber);
+	@GetMapping(path = "/page/{page}")
+	public  ResponseEntity<Iterable<Hotel>> findAllHotelsByPage(@PathVariable int page) {
+		Iterable<Hotel> hotels = hotelService.findAllHotelsByPage(page);
 		return ResponseEntity.ok().body(hotels);
 	}
 	
 	
-	@GetMapping(path = "/search/{name}")
-	public ResponseEntity<List<Hotel>> findHotelsByNameContainingIgnoreCase(@PathVariable String name){
+	@GetMapping(path = "/search")
+	public ResponseEntity<List<Hotel>> findHotelsByNameContainingIgnoreCase(@RequestParam(name = "name") String name){
 		List<Hotel> hotels = hotelService.findHotelsByNameContainingIgnoreCase(name);
 		return ResponseEntity.ok().body(hotels);
 	}
 
 	
-	@PutMapping("/updatehotel")
+	@PutMapping("/update")
 	public ResponseEntity<Hotel> updateHotelNameById(@Valid @RequestBody Hotel hotel) {
 		Hotel updatedHotel = hotelService.updateHotelNameById(hotel);
 		return ResponseEntity.ok().body(updatedHotel);
@@ -62,7 +63,7 @@ public class HotelController {
 
 	
 	@DeleteMapping(path = "/delete/{id}")
-	public ResponseEntity<String> deleteHotelById(@PathVariable int id) {
+	public ResponseEntity<String> deleteHotelById(@PathVariable long id) {
 		 hotelService.deleteHotelById(id);
 		 return new ResponseEntity<String>(HttpStatus.NOT_FOUND);	
 	}

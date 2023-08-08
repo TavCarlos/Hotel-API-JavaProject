@@ -24,26 +24,26 @@ public class RoomController {
 	@Autowired
 	private RoomService roomService;
 	
-	@PostMapping
+	@PostMapping(path = "/create")
 	public ResponseEntity<Room> createRoom(@Valid @RequestBody Room room) {	
 		Room newRoom = roomService.createRoom(room);
 		return ResponseEntity.ok().body(newRoom);
 	}
 	
-	@GetMapping(path = "/search/{id}")
-	public ResponseEntity<Room> findRoomById(@PathVariable int id) {
+	@GetMapping(path = "/{id}")
+	public ResponseEntity<Room> findRoomById(@PathVariable long id) {
 		Room room = roomService.findRoomById(id);
 		return ResponseEntity.ok().body(room);
 	}
 	
-	@GetMapping(path = "/{page}")
+	@GetMapping(path = "/all/{page}")
 	public ResponseEntity<Iterable<Room>> findAllRooms(@PathVariable int page){
 		Iterable<Room> rooms = roomService.findAllRooms(page);
 		return ResponseEntity.ok().body(rooms);
 	}
 	
 	
-	@PutMapping(path = "/updateroom")
+	@PutMapping(path = "/update")
 	public ResponseEntity<Room> updateHotelName(@Valid @RequestBody Room room) {
 		Room updatedRoom = roomService.updateHotelName(room);
 		return ResponseEntity.ok().body(updatedRoom);
@@ -51,14 +51,14 @@ public class RoomController {
 	
 	
 	@DeleteMapping(path = "/delete/{id}")
-	public ResponseEntity<String> deleteRoom(@PathVariable int id) {
+	public ResponseEntity<String> deleteRoom(@PathVariable long id) {
 		roomService.deleteRoom(id);
 		return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 	}
 	
-	@DeleteMapping(path = "/deleteall/{id}")
-	public ResponseEntity<String> deleteRoomsByHotel(@PathVariable int id) {
-		roomService.deleteRoomsByHotel(id);
+	@DeleteMapping(path = "/delete/all/{hotelId}")
+	public ResponseEntity<String> deleteRoomsByHotel(@PathVariable long hotelId) {
+		roomService.deleteRoomsByHotel(hotelId);
 		return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 	}
 }

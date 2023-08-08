@@ -19,7 +19,7 @@ public class Guest {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private long id;
 	
 	@NotBlank
 	@Size(min = 9, max = 14)
@@ -42,12 +42,12 @@ public class Guest {
 	}
 
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

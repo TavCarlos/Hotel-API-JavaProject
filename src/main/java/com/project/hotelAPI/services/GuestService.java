@@ -25,7 +25,7 @@ public class GuestService {
 	}
 
 	
-	public Guest findGuestById(int id) {
+	public Guest findGuestById(long id) {
 		return guestRepository.findById(id).orElseThrow(() 
 				-> new EntityNotFoundException("Guest ID " + id + " not found" ));
 	}
@@ -53,31 +53,27 @@ public class GuestService {
 	}
 	
 	
-	public void deleteGuestById(int guestId) {
+	public Guest updateGuest(Guest guest) {
+		findGuestById(guest.getId());
+		guestRepository.save(guest);
+		return guest;
+	}
+	
+	
+	public void deleteGuestById(long guestId) {
 		guestRepository.delete(findGuestById(guestId));
 	}
 	
 	
-	public void deleteAllReservationsByGuestId(int id) {
+	public void deleteAllReservationsByGuestId(long id) {
 		Guest guest = findGuestById(id);
 		List<Reservation> reservations = guest.getReservation();
 		
 		if(!reservations.isEmpty()) {
-			reservations.forEach(reservation -> reservation.setDeleted(true));
+			reservations.forEach(reservation -> reservation.setCancelled(true));
 		}
 		
 		guest.setReservation(null);
-		guestRepository.save(guest);
-	}
-	
-	
-	public void deleteReservationByGuestId(int guestId, int reservationId) {
-		Guest guest = findGuestById(guestId);
-		
-		guest.getReservation().stream()
-		.filter(reservation -> reservation.getId() == reservationId)
-		.forEach(reservation -> reservation.setDeleted(true));
-		
 		guestRepository.save(guest);
 	}
 }

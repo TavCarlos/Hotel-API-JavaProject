@@ -28,7 +28,7 @@ public class RoomService {
 	}
 	
 	
-	public Room findRoomById(int id) {
+	public Room findRoomById(long id) {
 		 return roomRepository.findById(id).orElseThrow(()
 				 -> new EntityNotFoundException("Room Id " + id + " not found"));
 	}
@@ -44,12 +44,12 @@ public class RoomService {
 		return room;
 	}
 	
-	public void deleteRoom(int id) {
+	public void deleteRoom(long id) {
 		roomRepository.delete(findRoomById(id));
 	}
 	
 	
-	public void deleteRoomsByHotel(int hotelId) {
+	public void deleteRoomsByHotel(long hotelId) {
 		Hotel hotel = hotelService.findHotelById(hotelId);
 		List<Room> rooms = roomRepository.findByHotel(hotel);
 		
