@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.project.hotelAPI.entity.Reservation;
-import com.project.hotelAPI.entity.Room;
 import com.project.hotelAPI.repository.ReservationRepository;
 import com.project.hotelAPI.services.exceptions.EntityNotFoundException;
 
@@ -43,12 +42,6 @@ public class ReservationService {
 		return reservationRepository.findById(id).orElseThrow(() 
 				-> new EntityNotFoundException("Reservation ID " + id + " not found"));
 	}
-
-	public List<Reservation> getReservationsByRoomId(long id) {
-		Room room = roomService.findRoomById(id);
-		return room.getReservation();
-	}
-	
 
 	public List<Reservation> getReservationsByDateRange(String firstDate, String lastDate) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

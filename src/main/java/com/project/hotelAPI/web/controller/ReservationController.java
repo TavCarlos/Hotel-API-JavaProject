@@ -43,13 +43,6 @@ public class ReservationController {
 		 return ResponseEntity.ok().body(reservation);
 	}
 	
-
-	@GetMapping(path =  "/room/reservations")
-	public ResponseEntity<List<Reservation>> getReservationsByRoomId(@RequestParam(name = "roomId") long roomId) {
-		List<Reservation> reservations = reservationService.getReservationsByRoomId(roomId);
-		return ResponseEntity.ok().body(reservations);
-	}
-	
 	@GetMapping(path = "/date")
 	public ResponseEntity<List<Reservation>> getReservationsByDateRange(@RequestParam(name = "fristDate") String firstDate,
 																		@RequestParam(name = "lastDate") String lastDate) {

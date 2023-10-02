@@ -1,45 +1,34 @@
 package com.project.hotelAPI.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.hotelAPI.entity.Room;
 import com.project.hotelAPI.repository.RoomRepository;
 import com.project.hotelAPI.services.exceptions.EntityNotFoundException;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class RoomService {
 
-	@Autowired
-	private RoomRepository roomRepository;
+	private final RoomRepository roomRepository;
 	
-	
+	@Transactional
 	public Room createRoom(Room room) {
-		roomRepository.save(room);
-		return room;
+		return roomRepository.save(room);
 	}
 	
-	
+	@Transactional(readOnly = true)
 	public Room findRoomById(long id) {
 		 return roomRepository.findById(id).orElseThrow(()
-				 -> new EntityNotFoundException("Room Id " + id + " not found"));
+				 -> new EntityNotFoundException(String.format("room id '%is' not found", id)));
 	}
 	
-	public Iterable<Room> findAllRooms(int page){
-		Pageable pageable = PageRequest.of(page, 10);
-		return roomRepository.findAll(pageable);
+	@Transactional(readOnly = true)
+	public Room findRoomByRoomNumber(int number) {
+		return roomRepository.findByRoomNumber(number).orElseThrow(
+				() -> new EntityNotFoundException(String.format("Room '%s' not found", number)));
 	}
-	
-	public Room updateHotelName(Room room) {
-		findRoomById(room.getId());
-		roomRepository.save(room);
-		return room;
-	}
-	
-	public void deleteRoom(long id) {
-		roomRepository.delete(findRoomById(id));
-	}
-	
 }

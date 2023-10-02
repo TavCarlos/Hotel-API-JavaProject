@@ -1,58 +1,54 @@
 package com.project.hotelAPI.entity;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.project.hotelAPI.enums.StatusRoom;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.Positive;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "rooms")
 @Entity
-public class Room {
+public class Room implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+	@Column(name = "room_number", nullable = false, unique = true)
+	private int RoomNumber;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", nullable = false)
+	private StatusRoom status;
 	
-	
-	@Positive
-	private int roomNumber;
-	
-	@OneToMany(mappedBy = "room")
-	private List<Reservation> reservations;
-	
-	public Room() {
-
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
-
-
-	public int getRoomNumber() {
-		return roomNumber;
-	}
-
-	public void setRoomNumber(int roomNumber) {
-		this.roomNumber = roomNumber;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public List<Reservation> getReservation() {
-		return reservations;
-	}
-
-	public void setReservations(List<Reservation> reservations) {
-		this.reservations = reservations;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Room other = (Room) obj;
+		return id == other.id;
 	}
 }
