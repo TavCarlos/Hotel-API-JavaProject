@@ -1,4 +1,4 @@
-package com.project.hotelAPI.controllers.exceptions;
+package com.project.hotelAPI.web.exceptions;
 
 import java.io.Serializable;
 import java.time.Instant;

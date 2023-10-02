@@ -1,4 +1,4 @@
-package com.project.hotelAPI.controllers;
+package com.project.hotelAPI.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.hotelAPI.models.entities.Room;
+import com.project.hotelAPI.entity.Room;
 import com.project.hotelAPI.services.RoomService;
 
 import jakarta.validation.Valid;
@@ -53,12 +53,6 @@ public class RoomController {
 	@DeleteMapping(path = "/delete/{id}")
 	public ResponseEntity<String> deleteRoom(@PathVariable long id) {
 		roomService.deleteRoom(id);
-		return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-	}
-	
-	@DeleteMapping(path = "/delete/all/{hotelId}")
-	public ResponseEntity<String> deleteRoomsByHotel(@PathVariable long hotelId) {
-		roomService.deleteRoomsByHotel(hotelId);
 		return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 	}
 }

@@ -1,4 +1,4 @@
-package com.project.hotelAPI.models.entities;
+package com.project.hotelAPI.entity;
 
 import java.util.List;
 
@@ -10,72 +10,49 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Positive;
 
-@Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Guest {
+@Entity
+public class Room {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@NotBlank
-	@Size(min = 9, max = 14)
-	private String cpf;
 	
-	@NotBlank
-	private String name;
+	@Positive
+	private int roomNumber;
 	
-	@OneToMany(mappedBy = "guest")
+	@OneToMany(mappedBy = "room")
 	private List<Reservation> reservations;
 	
-	public Guest() {
+	public Room() {
 
 	}
-	
-	public Guest(String nome, String cpf) {
-		super();
-		this.name = nome;
-		this.cpf = cpf;
+
+
+	public int getRoomNumber() {
+		return roomNumber;
 	}
 
+	public void setRoomNumber(int roomNumber) {
+		this.roomNumber = roomNumber;
+	}
 
 	public long getId() {
 		return id;
 	}
 
-
 	public void setId(long id) {
 		this.id = id;
-	}
-
-
-	public String getCpf() {
-		return cpf;
-	}
-
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-
-	public String getName() {
-		return name;
-	}
-
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public List<Reservation> getReservation() {
 		return reservations;
 	}
 
-	public void setReservation(List<Reservation> reservation) {
-		this.reservations = reservation;
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
 	}
 }

@@ -1,11 +1,9 @@
-package com.project.hotelAPI.controllers;
+package com.project.hotelAPI.web.controller;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.hotelAPI.models.entities.Reservation;
+import com.project.hotelAPI.entity.Reservation;
 import com.project.hotelAPI.services.ReservationService;
 
 import jakarta.validation.Valid;
@@ -45,17 +43,6 @@ public class ReservationController {
 		 return ResponseEntity.ok().body(reservation);
 	}
 	
-	@GetMapping(path = "/guestReservations")
-	public ResponseEntity<List<Reservation>> getReservationsByGuestId(@RequestParam(name = "guestId") long guestId) {
-		List<Reservation> reservations = reservationService.getReservationsByGuestId(guestId);
-		return ResponseEntity.ok().body(reservations);
-	}
-	
-	@GetMapping(path = "/guest")
-	public ResponseEntity<List<Reservation>> getReservationsByGuestCpf(@RequestParam(name = "cpf") String cpf){
-		List<Reservation> reservations = reservationService.getReservationsByGuestCpf(cpf);
-		return ResponseEntity.ok().body(reservations);
-	}
 
 	@GetMapping(path =  "/room/reservations")
 	public ResponseEntity<List<Reservation>> getReservationsByRoomId(@RequestParam(name = "roomId") long roomId) {
@@ -76,11 +63,4 @@ public class ReservationController {
 		return ResponseEntity.ok().body(updatedReservation);
 	}
 	
-	
-	@DeleteMapping(path = "/{guestId}/reservations/{reservationId}")
-	public ResponseEntity<String> deleteReservationByGuest(@PathVariable long guestId, 
-																@PathVariable long reservationId) {
-		reservationService.deleteReservationByGuest(guestId, reservationId);
-		return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-	}
 }

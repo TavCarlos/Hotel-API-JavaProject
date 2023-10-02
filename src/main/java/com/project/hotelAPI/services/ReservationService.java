@@ -9,10 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.project.hotelAPI.models.entities.Guest;
-import com.project.hotelAPI.models.entities.Reservation;
-import com.project.hotelAPI.models.entities.Room;
-import com.project.hotelAPI.models.repository.ReservationRepository;
+import com.project.hotelAPI.entity.Reservation;
+import com.project.hotelAPI.entity.Room;
+import com.project.hotelAPI.repository.ReservationRepository;
 import com.project.hotelAPI.services.exceptions.EntityNotFoundException;
 
 @Service
@@ -25,7 +24,7 @@ public class ReservationService {
 	RoomService roomService;
 	
 	@Autowired
-	GuestService guestService;
+	ClientService guestService;
 	
 
 	public Reservation createReservation(Reservation reservation) {
@@ -44,19 +43,6 @@ public class ReservationService {
 		return reservationRepository.findById(id).orElseThrow(() 
 				-> new EntityNotFoundException("Reservation ID " + id + " not found"));
 	}
-	
-
-	public List<Reservation> getReservationsByGuestId(long id) {
-		Guest guest = guestService.findGuestById(id);
-		return guest.getReservation();
-	}
-	
-
-	public List<Reservation> getReservationsByGuestCpf(String cpf){
-		Guest guest = guestService.findGuestByCpf(cpf);
-		return guest.getReservation();
-	}
-
 
 	public List<Reservation> getReservationsByRoomId(long id) {
 		Room room = roomService.findRoomById(id);
@@ -80,18 +66,5 @@ public class ReservationService {
 		return updatedReservation;
 	}
 	
-	
-	
-	public void deleteReservationByGuest(long guestId, long reservationId) {
-		List<Reservation> reservations = getReservationsByGuestId(guestId);
-		Reservation reservationToDelete = getReservationById(reservationId);
-		
-		for(Reservation reservation : reservations) {
-			if(reservation.equals(reservationToDelete)) {
-				reservationToDelete.setCancelled(true);
-				reservationRepository.save(reservationToDelete);
-			}
-		}
-	}
 	
 }

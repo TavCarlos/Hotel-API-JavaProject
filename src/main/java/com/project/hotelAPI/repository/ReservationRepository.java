@@ -1,4 +1,4 @@
-package com.project.hotelAPI.models.repository;
+package com.project.hotelAPI.repository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import com.project.hotelAPI.models.entities.Reservation;
+import com.project.hotelAPI.entity.Reservation;
 
 public interface ReservationRepository extends CrudRepository<Reservation, Long>, PagingAndSortingRepository<Reservation, Long> {
 

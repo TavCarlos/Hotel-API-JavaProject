@@ -1,4 +1,4 @@
-package com.project.hotelAPI.models.entities;
+package com.project.hotelAPI.entity;
 
 import java.time.LocalDate;
 
@@ -29,7 +29,7 @@ public class Reservation {
 	
 	@ManyToOne
 	@NotBlank
-	private Guest guest;
+	private Client guest;
 	
 	@FutureOrPresent(message = "Invalid check-in date")
 	private LocalDate checkInDate;
@@ -44,7 +44,7 @@ public class Reservation {
 
 	}
 	
-	public Reservation(LocalDate checkIn, LocalDate checkOut, Room room, Guest guest) {
+	public Reservation(LocalDate checkIn, LocalDate checkOut, Room room, Client guest) {
 		this.checkInDate = checkIn;
 		this.checkOutDate = checkOut;
 		this.room = room;
@@ -67,11 +67,11 @@ public class Reservation {
 		this.room = roomId;
 	}
 
-	public Guest getGuestId() {
+	public Client getGuestId() {
 		return guest;
 	}
 
-	public void setGuestId(Guest guestId) {
+	public void setGuestId(Client guestId) {
 		this.guest = guestId;
 	}
 
