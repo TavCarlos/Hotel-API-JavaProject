@@ -1,6 +1,7 @@
 package com.project.hotelAPI.web.dto;
 
-import jakarta.validation.constraints.NotNull;
+import com.project.hotelAPI.enums.StatusRoom;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +11,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomRequestDTO {
+public class RoomResponseDTO {
 
-	@NotNull
+	private long id;
 	private int roomNumber;
+	private StatusRoom status;
 }

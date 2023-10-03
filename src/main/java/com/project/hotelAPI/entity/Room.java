@@ -29,12 +29,12 @@ public class Room implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	@Column(name = "room_number", nullable = false, unique = true)
-	private int RoomNumber;
+	private int roomNumber;
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)
-	private StatusRoom status;
+	private StatusRoom status = StatusRoom.FREE;
 	
 	@Override
 	public int hashCode() {

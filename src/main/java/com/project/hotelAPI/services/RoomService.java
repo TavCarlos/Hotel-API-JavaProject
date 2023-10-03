@@ -27,7 +27,7 @@ public class RoomService {
 	}
 	
 	@Transactional(readOnly = true)
-	public Room findRoomByRoomNumber(int number) {
+	public Room findByRoomNumber(int number) {
 		return roomRepository.findByRoomNumber(number).orElseThrow(
 				() -> new EntityNotFoundException(String.format("Room '%s' not found", number)));
 	}
