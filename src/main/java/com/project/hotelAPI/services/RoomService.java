@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.hotelAPI.entity.Room;
+import com.project.hotelAPI.enums.StatusRoom;
 import com.project.hotelAPI.repository.RoomRepository;
 import com.project.hotelAPI.services.exceptions.EntityNotFoundException;
 
@@ -31,4 +32,10 @@ public class RoomService {
 		return roomRepository.findByRoomNumber(number).orElseThrow(
 				() -> new EntityNotFoundException(String.format("Room '%s' not found", number)));
 	}
+	
+	public Room findFreeRoom() {
+		return roomRepository.findFristByStatus(StatusRoom.FREE).orElseThrow(
+				() -> new EntityNotFoundException("There's no free room available"));
+	}
+	
 }
