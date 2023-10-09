@@ -46,7 +46,7 @@ public class AccommodationService {
 			throw new EntityNotFoundException(String.format("No reservation found for '%s'", cpf));
 		}
 		
-		reservation.setCheckInDate(LocalDateTime.now());
+		reservation.setCheckIn(LocalDateTime.now());
 		
 		return reservation;
 	}
@@ -54,7 +54,7 @@ public class AccommodationService {
 	@Transactional
 	public Reservation checkOut(String bookingNumber) {
 		Reservation reservation = reservationService.findReservation(bookingNumber);
-		BigDecimal serviceCost = AccomodationUtil.generateServiceCost(reservation.getCheckInDate());
+		BigDecimal serviceCost = AccomodationUtil.generateServiceCost(reservation.getCheckIn());
 		
 		reservation.setServiceCost(serviceCost);
 		reservation.getRoom().setStatus(StatusRoom.FREE);
@@ -64,11 +64,16 @@ public class AccommodationService {
 	}
 	
 	@Transactional
-	public void cancelling(String bookingNumber) {
+	public Reservation cancelling(String bookingNumber) {
 		Reservation reservation = reservationService.findReservation(bookingNumber);
-		BigDecimal serviceCost = AccomodationUtil.generateServiceCost(reservation.getCheckInDate());
+		BigDecimal serviceCost = AccomodationUtil.generateServiceCost(reservation.getCheckIn());
 		
-		BigDecimal cancellingFee = AccomodationUtil.calculatingFee(reservation.getEstimatedCheckInDate(), serviceCost);
+		BigDecimal cancellingFee = AccomodationUtil.calculatingFee(reservation.getCheckIn(), serviceCost);
 		reservation.setCancelationFee(cancellingFee);
+		reservation.setServiceCost(serviceCost);
+		reservation.getRoom().setStatus(StatusRoom.FREE);
+		
+		return reservation;
 	}
+	
 }

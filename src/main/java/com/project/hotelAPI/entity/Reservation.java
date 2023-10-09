@@ -33,14 +33,10 @@ public class Reservation implements Serializable {
 	private String bookingNumber;
 	@Column(name = "booking_date", nullable = false)
 	private LocalDateTime bookingDate;
-	@Column(name = "estimated_check_in_date", nullable = false)
-	private LocalDateTime estimatedCheckInDate;
-	@Column(name = "estimated_check_out_date", nullable = false)
-	private LocalDateTime estimatedCheckOutDate;
-	@Column(name = "check_in_date")
-	private LocalDateTime checkInDate;
-	@Column(name = "check_out_date")
-	private LocalDateTime checkOutDate;
+	@Column(name = "check_in_date", nullable = false)
+	private LocalDateTime checkIn;
+	@Column(name = "check_out_date", nullable = false)
+	private LocalDateTime CheckOut;
 	@Column(name = "serviceCost", columnDefinition = "decimal(7,2)")
 	private BigDecimal serviceCost;
 	@Column(name = "cancellation_fee", columnDefinition = "decimal(7,2)")

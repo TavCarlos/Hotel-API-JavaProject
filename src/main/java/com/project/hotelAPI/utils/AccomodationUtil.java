@@ -46,9 +46,10 @@ public class AccomodationUtil {
 		
 		long amountOfDays = ChronoUnit.DAYS.between(begin, end);
 		
-		double totalCost =  dailyCost * amountOfDays;
 		
-		return new BigDecimal(totalCost).setScale(2, RoundingMode.HALF_EVEN);
+		return amountOfDays != 0 ? new BigDecimal(dailyCost * amountOfDays).setScale(2,RoundingMode.HALF_EVEN) : 
+			new BigDecimal(dailyCost).setScale(2, RoundingMode.HALF_EVEN);
+		
 	}
 	
 	public static String generateReceipt() {
