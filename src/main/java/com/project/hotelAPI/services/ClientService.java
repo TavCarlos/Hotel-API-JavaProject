@@ -1,11 +1,17 @@
 package com.project.hotelAPI.services;
 
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.hotelAPI.entity.Client;
+import com.project.hotelAPI.exceptions.CpfUniqueViolationException;
+import com.project.hotelAPI.exceptions.EntityNotFoundException;
 import com.project.hotelAPI.repository.ClientRepository;
-import com.project.hotelAPI.services.exceptions.EntityNotFoundException;
+import com.project.hotelAPI.repository.projections.ClientProjection;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,22 +19,31 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ClientService {
 
-	private final ClientRepository ClientRepository;
+	private final ClientRepository clientRepository;
 	
 	@Transactional
 	public Client createClient(Client client) {
-		return ClientRepository.save(client);
+		try {
+			return clientRepository.save(client);			
+		} catch(DataIntegrityViolationException ex) {
+			throw new CpfUniqueViolationException(String.format("CPF '%s' already registered", client.getCpf()));
+		}
 	}
 
 	@Transactional(readOnly = true)
 	public Client findClientById(long id) {
-		return ClientRepository.findById(id).orElseThrow(() 
+		return clientRepository.findById(id).orElseThrow(() 
 				-> new EntityNotFoundException(String.format("Guest '$s' not found", id)));
 	}
 	
 	@Transactional(readOnly = true)
 	public Client findClientByCpf(String cpf){
-		return ClientRepository.findByCpf(cpf).orElseThrow(() 
+		return clientRepository.findByCpf(cpf).orElseThrow(() 
 				-> new EntityNotFoundException(String.format("Guest '$s' not found", cpf)));
+	}
+	
+	@Transactional(readOnly = true)
+	public Page<ClientProjection> findAllClients(Pageable pageable) {
+		return clientRepository.findAllClients(pageable);
 	}
 }

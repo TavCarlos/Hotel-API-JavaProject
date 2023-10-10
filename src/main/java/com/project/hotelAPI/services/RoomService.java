@@ -1,12 +1,14 @@
 package com.project.hotelAPI.services;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.hotelAPI.entity.Room;
 import com.project.hotelAPI.enums.StatusRoom;
+import com.project.hotelAPI.exceptions.EntityNotFoundException;
+import com.project.hotelAPI.exceptions.RoomUniqueViolationException;
 import com.project.hotelAPI.repository.RoomRepository;
-import com.project.hotelAPI.services.exceptions.EntityNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +20,11 @@ public class RoomService {
 	
 	@Transactional
 	public Room createRoom(Room room) {
-		return roomRepository.save(room);
+		try {
+			return roomRepository.save(room);
+		} catch(DataIntegrityViolationException ex) {
+			throw new RoomUniqueViolationException(String.format("Room number '%s' already exists", room.getRoomNumber()));
+		}
 	}
 	
 	@Transactional(readOnly = true)

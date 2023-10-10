@@ -1,19 +1,22 @@
 package com.project.hotelAPI.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.hotelAPI.entity.Reservation;
 import com.project.hotelAPI.repository.ReservationRepository;
+import com.project.hotelAPI.repository.projections.ReservationProjection;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationService {
 
-	@Autowired
-	ReservationRepository reservationRepository;
+	private final ReservationRepository reservationRepository;
 
 	@Transactional
 	public Reservation createReservation(Reservation reservation) {
@@ -27,4 +30,8 @@ public class ReservationService {
 				() -> new EntityNotFoundException("Reservation not found"));
 	}
 	
+	@Transactional(readOnly = true)
+	public Page<ReservationProjection> findAllReservations(String cpf, Pageable pageable) {
+		return reservationRepository.findAllByClientCpf(cpf, pageable);
+	}
 }

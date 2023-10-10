@@ -1,27 +1,40 @@
 package com.project.hotelAPI.web.exceptions;
 
-import java.time.Instant;
-
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.project.hotelAPI.services.exceptions.EntityNotFoundException;
+import com.project.hotelAPI.exceptions.CpfUniqueViolationException;
+import com.project.hotelAPI.exceptions.EntityNotFoundException;
+import com.project.hotelAPI.exceptions.RoomUniqueViolationException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class ResourceExceptionHandler {
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<StandardError> methodArgumentNotValidException(HttpServletRequest request, BindingResult result){
+		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(new StandardError(request, HttpStatus.UNPROCESSABLE_ENTITY, "Campo(s) invalido(s)", result));
+	}
 
 	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<StandardError> entityNotFound(EntityNotFoundException e, HttpServletRequest request){
-		StandardError err = new StandardError();
-		err.setTimestamp(Instant.now());
-		err.setStatus(HttpStatus.NOT_FOUND.value());
-		err.setError("Resource not found");
-		err.setMessage(e.getMessage());
-		err.setPath(request.getRequestURI());
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+	public ResponseEntity<StandardError> entityNotFound(EntityNotFoundException ex, HttpServletRequest request){
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(new StandardError(request, HttpStatus.NOT_FOUND, ex.getMessage()));
+	}
+	
+	@ExceptionHandler({CpfUniqueViolationException.class, RoomUniqueViolationException.class})
+	public ResponseEntity<StandardError> DataIntegrityViolationException(RuntimeException ex, HttpServletRequest request){
+		return ResponseEntity.status(HttpStatus.CONFLICT)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(new StandardError(request, HttpStatus.CONFLICT, ex.getMessage()));
 	}
 }

@@ -1,0 +1,17 @@
+package com.project.hotelAPI.web.dto.mapper;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+
+import com.project.hotelAPI.web.dto.PageableDTO;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class PageableMapper {
+	
+	public static PageableDTO toDto(Page<?> page) {
+		return new ModelMapper().map(page, PageableDTO.class);
+	}
+}
