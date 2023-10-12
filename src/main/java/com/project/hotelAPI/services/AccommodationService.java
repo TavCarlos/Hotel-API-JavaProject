@@ -28,7 +28,7 @@ public class AccommodationService {
 		Client client = clientService.findClientByCpf(reservation.getClient().getCpf());
 		reservation.setClient(client);
 		
-		Room room = roomService.findFreeRoom();
+		Room room = roomService.findFreeRoom(reservation);
 		room.setStatus(StatusRoom.RESERVED);
 		reservation.setRoom(room);
 		

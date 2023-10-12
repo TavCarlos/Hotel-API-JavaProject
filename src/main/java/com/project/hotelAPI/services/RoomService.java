@@ -1,13 +1,19 @@
 package com.project.hotelAPI.services;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.hotelAPI.entity.Reservation;
 import com.project.hotelAPI.entity.Room;
 import com.project.hotelAPI.enums.StatusRoom;
 import com.project.hotelAPI.exceptions.EntityNotFoundException;
 import com.project.hotelAPI.exceptions.RoomUniqueViolationException;
+import com.project.hotelAPI.repository.ReservationRepository;
 import com.project.hotelAPI.repository.RoomRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -17,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class RoomService {
 
 	private final RoomRepository roomRepository;
+	private final ReservationRepository reservationRepository;
 	
 	@Transactional
 	public Room createRoom(Room room) {
@@ -39,9 +46,27 @@ public class RoomService {
 				() -> new EntityNotFoundException(String.format("Room '%s' not found", number)));
 	}
 	
-	public Room findFreeRoom() {
-		return roomRepository.findFristByStatus(StatusRoom.FREE).orElseThrow(
-				() -> new EntityNotFoundException("There's no free room available"));
+	@Transactional(readOnly = true)
+	public Room findFreeRoom(Reservation reservation) {
+		Optional<Room> room = roomRepository.findFristByStatus(StatusRoom.FREE);
+		
+		if(!room.isEmpty()) {
+			return room.get();
+		}
+		
+		List<Reservation> conflictedBookings = reservationRepository.findBookingTimeConflicts
+				(reservation.getCheckIn(), reservation.getCheckOut());
+		
+		List<Room> conflictedRooms = conflictedBookings.stream().map(e -> e.getRoom()).collect(Collectors.toList());
+		
+		List<Reservation> newReservation =
+				reservationRepository.findRoomByReservationDates(reservation.getCheckIn(), reservation.getCheckOut(), conflictedRooms);
+		
+		if(newReservation.isEmpty()) {
+			throw new EntityNotFoundException("There's no available rooms");
+		}
+		return newReservation.get(0).getRoom();
 	}
+	
 	
 }

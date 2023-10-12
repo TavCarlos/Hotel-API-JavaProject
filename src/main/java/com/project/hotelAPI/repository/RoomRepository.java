@@ -13,4 +13,5 @@ public interface RoomRepository extends JpaRepository<Room, Long>{
 
 	public Optional<Room> findByRoomNumber(int number);
 	public Optional<Room> findFristByStatus(StatusRoom status);
+	
 }
