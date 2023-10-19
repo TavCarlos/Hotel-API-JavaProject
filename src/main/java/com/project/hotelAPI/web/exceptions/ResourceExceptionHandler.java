@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.project.hotelAPI.exceptions.CpfUniqueViolationException;
 import com.project.hotelAPI.exceptions.EntityNotFoundException;
+import com.project.hotelAPI.exceptions.InvalidDateException;
 import com.project.hotelAPI.exceptions.RoomUniqueViolationException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +26,7 @@ public class ResourceExceptionHandler {
 	}
 
 	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<StandardError> entityNotFound(EntityNotFoundException ex, HttpServletRequest request){
+	public ResponseEntity<StandardError> EntityNotFound(EntityNotFoundException ex, HttpServletRequest request){
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(new StandardError(request, HttpStatus.NOT_FOUND, ex.getMessage()));
@@ -36,5 +37,12 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.CONFLICT)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(new StandardError(request, HttpStatus.CONFLICT, ex.getMessage()));
+	}
+	
+	@ExceptionHandler(InvalidDateException.class)
+	public ResponseEntity<StandardError> InvalidDateException(RuntimeException ex, HttpServletRequest request){
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(new StandardError(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
 	}
 }

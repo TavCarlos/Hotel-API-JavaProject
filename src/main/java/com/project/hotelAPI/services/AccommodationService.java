@@ -10,6 +10,7 @@ import com.project.hotelAPI.entity.Client;
 import com.project.hotelAPI.entity.Reservation;
 import com.project.hotelAPI.entity.Room;
 import com.project.hotelAPI.enums.StatusRoom;
+import com.project.hotelAPI.exceptions.InvalidDateException;
 import com.project.hotelAPI.utils.AccomodationUtil;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -25,6 +26,11 @@ public class AccommodationService {
 	
 	@Transactional
 	public Reservation booking(Reservation reservation) {
+		
+		if(reservation.getCheckOut().isBefore(reservation.getCheckIn())) {
+			throw new InvalidDateException("Checkout date cannot be in the past of checkin date.");
+		}
+		
 		Client client = clientService.findClientByCpf(reservation.getClient().getCpf());
 		reservation.setClient(client);
 		

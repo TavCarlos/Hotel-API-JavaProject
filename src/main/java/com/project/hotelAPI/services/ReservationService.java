@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.hotelAPI.entity.Reservation;
+import com.project.hotelAPI.exceptions.EntityNotFoundException;
 import com.project.hotelAPI.repository.ReservationRepository;
 import com.project.hotelAPI.repository.projections.ReservationProjection;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -34,4 +34,5 @@ public class ReservationService {
 	public Page<ReservationProjection> findAllReservations(String cpf, Pageable pageable) {
 		return reservationRepository.findAllByClientCpf(cpf, pageable);
 	}
+	
 }
