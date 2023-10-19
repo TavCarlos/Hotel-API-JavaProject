@@ -72,5 +72,4 @@ public class ReservationController {
 		
 		return ResponseEntity.ok().body(ReservationMapper.toDto(reservation));
 	}
-	
 }
